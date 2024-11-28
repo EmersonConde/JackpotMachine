@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JackpotMachine")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c78917b816c953dc4e70ab5ed8273eecb5dce2f")]
 [assembly: System.Reflection.AssemblyProductAttribute("JackpotMachine")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JackpotMachine")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
