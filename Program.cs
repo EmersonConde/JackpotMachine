@@ -2,18 +2,55 @@
 using System.Formats.Asn1;
 namespace JackpotMachine
 {
+    using MySql.Data.MySqlClient;
+
+    public class BancoDeDados
+    {
+        private string connectionString = "Server=127.0.0.1;Database=jackpot_DB;Uid=root;Pwd=;";
+
+        public void InserirResultado(float bet, float award, string playerid)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "INSERT INTO results (playerid, bet, award) VALUES (@playerid, @bet, @award)";
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@bet", bet);
+                        command.Parameters.AddWithValue("@award", award);
+                        command.Parameters.AddWithValue("@playerid", playerid);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    // Trate exceções relacionadas ao MySQL aqui
+                    Console.WriteLine("Erro: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+    }
+
     class Program
     {
         static void Main()
         {
             Console.Clear();
-            Console.Write("What is your first wallet: ");
+            Console.Write("What's your name player: ");
+            string playerid = Console.ReadLine();
+            Console.Write("Insert Your Coins: ");
             float wallet = float.Parse(Console.ReadLine());
-            Main2(wallet);
+            Main2(wallet, playerid);
         }
-        static void Main2(float wallet)
+        static void Main2(float wallet, string playerid)
         {
-            string roll = rollquestion(wallet);
+            string roll = rollquestion(wallet, playerid);
             switch(roll) {
                 case "yes":
                     Console.Clear();
@@ -27,19 +64,19 @@ namespace JackpotMachine
                     Console.Write("What is you bet: ");
                     float bet = float.Parse(Console.ReadLine());
                     Console.WriteLine($"Number 1: {result1} \nNumber 2: {result2} \nNumber 3: {result3}");
-                    wallet = wallet + award_analysis(result1, result2, result3, bet);
+                    wallet = wallet + award_analysis(result1, result2, result3, bet, playerid);
                     Console.WriteLine($"Wallet: {wallet} Coins");
                     Console.ReadLine();
-                    Main2(wallet);
+                    Main2(wallet, playerid);
                     break;
                 case "no":
-                    exitcommand(wallet);
+                    exitcommand(wallet, playerid);
                     break;
                 case "exit":
-                    exitcommand(wallet);
+                    exitcommand(wallet, playerid);
                     break;
                 default:
-                    Main2(wallet);
+                    Main2(wallet, playerid);
                     break;
             };
         }
@@ -68,22 +105,22 @@ namespace JackpotMachine
             }
             return result;
         }
-        static string rollquestion(float wallet)
+        static string rollquestion(float wallet, string playerid)
         {
             Console.Clear();
-            Console.WriteLine("Hello Player, are you ready to be rich or poor, your luck decides 💎");
+            Console.WriteLine($"Are you ready to be rich or poor {playerid}, your luck decides 💎");
             Console.WriteLine($"Current Wallet: {wallet} Coins");
             Console.WriteLine("Do you want to roll? (yes/no/exit)");
             return Console.ReadLine();
         }
-        static void exitcommand(float wallet)
+        static void exitcommand(float wallet, string playerid)
         {
             Console.Clear();
             Console.WriteLine("Do you want to stop the game? (yes/no)");
             string continuevar = Console.ReadLine();
             switch(continuevar) {
                 case "no":
-                    Main2(wallet);
+                    Main2(wallet, playerid);
                     break;
                 case "yes":
                     Console.Clear();
@@ -92,11 +129,11 @@ namespace JackpotMachine
                     Environment.Exit(0);
                     break;
                 default:
-                    Main2(wallet);
+                    Main2(wallet, playerid);
                     break;
             }
         }
-        static float award_analysis(string r1, string r2, string r3, float bet)
+        static float award_analysis(string r1, string r2, string r3, float bet, string playerid)
         {
         float award = 0;
         if (r1 == r2 & r2 == r3){
@@ -111,6 +148,8 @@ namespace JackpotMachine
         }else {
             award = bet*0;
         }
+        BancoDeDados banco = new BancoDeDados();
+        banco.InserirResultado(bet, award, playerid);
         return award - bet;
         }
     }

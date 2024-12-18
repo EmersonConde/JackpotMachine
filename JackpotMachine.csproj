@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,5 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySqlDataManager.NETCore" Version="1.0.0" />
+    <PackageReference Include="linq2db.MySql" Version="5.4.1" />
+    <PackageReference Include="linq2db.MySqlConnector" Version="5.4.1" />
+    <PackageReference Include="MySql.Data" Version="9.1.0" />
+  </ItemGroup>
 
 </Project>
